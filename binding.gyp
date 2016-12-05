@@ -1,14 +1,19 @@
 {
   "targets": [
     {
-      'target_name': 'node_jq_ext',
-      'sources': ['ext/jq_wrapper.cpp', 'ext/node_jq_ext.cpp'],
-      'cflags!': [ '-fno-exceptions' ],
-      'cflags_cc!': [ '-fno-exceptions' ],
+      'target_name': 'node-jq-ext',
+      'sources': ['ext/jq_wrapper.cpp', 'ext/jq.cpp', 'ext/node_jq_ext.cpp'],
+      'include_dirs': ['<!(node -e "require(\'nan\')")'],
+      'cflags': ['-std=c++11'],
+      'cflags!': ['-fno-exceptions'],
+      'cflags_cc!': ['-fno-exceptions'],
+      'libraries': ['-L/opt/local/lib', '-ljq'],
       'conditions': [
         ['OS=="mac"', {
           'xcode_settings': {
-            'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
+            'MACOSX_DEPLOYMENT_TARGET': '10.9',
+            'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
+            'OTHER_CFLAGS': ['-stdlib=libc++']
           }
         }]
       ]

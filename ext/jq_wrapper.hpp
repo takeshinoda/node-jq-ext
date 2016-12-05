@@ -4,36 +4,35 @@
 #include <string>
 #include <stdexcept>
 
-#include <node.h>
-#include <node_object_wrap.h>
-
-#include <jq.h>
-
+extern "C" {
+  #include <jq.h>
+}
 
 namespace node_jq_ext {
-  using v8::Local;
-  using v8::Object;
-  using v8::Value;
-  using v8::Function;
-  using v8::FunctionCallbackInfo;
-  using v8::Persistent;
 
-  class JqWrapper : public node::ObjectWrap {
+  class InvalidError : public std::logic_error {
     public:
-      std::string getCode();
+      InvalidError(const std::string& message) : logic_error(message) {}
+  };
 
-      static void Init(Local<Object> exports);
+  class JqWrapper {
+    public:
+      JqWrapper(const std::string&);
+      ~JqWrapper();
+
+      void addCompileErrMsg(const std::string&);
+      std::string execute(const std::string&) throw(std::logic_error);
 
     private:
       jq_state* jq;
+      jv_parser* jv;
       std::string code;
+      std::string compile_err_msg;
 
-      explicit JqWrapper(const std::string&);
-      ~JqWrapper();
-
-      static void New(const FunctionCallbackInfo<Value>&);
-      static void Parse(const FunctionCallbackInfo<Value>&);
-      static Persistent<Function> constructor;
+      void jq_process(std::string&, ::jv);
+      void parse(std::string&, const std::string&) throw(std::logic_error);
+      void compile(const std::string&) throw(std::logic_error);
+      void initialize() throw(std::logic_error);
   };
 }
 
