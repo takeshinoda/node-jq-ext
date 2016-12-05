@@ -15,7 +15,7 @@ namespace node_jq_ext {
   }
 
   void initAll(Local<Object> exports) {
-    JqWrapper::Init(exports);
+    Jq::Init(exports);
     NODE_SET_METHOD(exports, "test", testFunction);
   }
 
