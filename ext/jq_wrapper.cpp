@@ -15,11 +15,10 @@ namespace node_jq_ext {
     if (this->jq) jq_teardown(&this->jq);
   }
 
-  std::string JqWrapper::execute(const std::string& input) throw(std::logic_error) {
+  std::vector<std::string> JqWrapper::execute(const std::string& input) throw(std::logic_error) {
     this->initialize();
     this->compile(input);
-
-    std::string buf;
+    std::vector<std::string> buf;
     this->parse(buf, input);
 
     return buf;
@@ -52,20 +51,20 @@ namespace node_jq_ext {
     }
   }
 
-  void JqWrapper::jq_process(std::string& buf, ::jv value) {
+  void JqWrapper::jq_process(std::vector<std::string>& buf, ::jv value) {
     jq_start(this->jq, value, 0);
     ::jv jq_ret;
 
     while (::jv_is_valid(jq_ret = jq_next(jq))) {
       ::jv dumped = jv_dump_string(jq_ret, 0);
       std::string str(::jv_string_value(dumped));
-      buf.append(str);
+      buf.push_back(str);
     }
 
     jv_free(jq_ret);
   }
 
-  void JqWrapper::parse(std::string& buf, const std::string& input) throw(std::logic_error) {
+  void JqWrapper::parse(std::vector<std::string>& buf, const std::string& input) throw(std::logic_error) {
     this->jv = jv_parser_new(0);
     if (!this->jv) throw std::logic_error("Failed jv_parser_new()");
 

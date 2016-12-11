@@ -8,11 +8,12 @@ namespace node_jq_ext {
   using v8::FunctionTemplate;
   using v8::Isolate;
   using v8::Local;
-  using v8::Number;
   using v8::Object;
-  using v8::Persistent;
+  using v8::Array;
+  using v8::Number;
   using v8::String;
   using v8::Value;
+  using v8::Persistent;
   using v8::Exception;
 
   Nan::Persistent<Function> Jq::constructor;
@@ -61,7 +62,7 @@ namespace node_jq_ext {
 
     std::string _input(*input);
     std::string _code(*code);
-    std::string _result;
+    std::vector<std::string> _result;
 
     JqWrapper _jq_wrapper(_code);
     try {
@@ -71,7 +72,14 @@ namespace node_jq_ext {
       Nan::ThrowError(_e.what());
       return;
     }
-    info.GetReturnValue().Set(Nan::New(_result.c_str()).ToLocalChecked());
+
+    Local<Array> result_array = Nan::New<Array>();
+    for (auto itr = _result.begin(); itr != _result.end(); ++itr) {
+      size_t index = std::distance(_result.begin(), itr);
+      result_array->Set(index, Nan::New<String>(itr->c_str()).ToLocalChecked());
+    }
+
+    info.GetReturnValue().Set(result_array);
   }
 }
 

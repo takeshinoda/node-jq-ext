@@ -16,12 +16,27 @@ describe('JqWrapper', () => {
   describe('#parse', () => {
     it('source: "."', () => {
       const obj = new node_jq_ext.Jq()
-      assert(obj.parse('{"aa": 1}') == '{"aa":1}')
+      assert.deepEqual(obj.parse('{"aa": 1}'), ['{"aa":1}'])
     })
 
     it('source: ".aa"', () => {
       const obj = new node_jq_ext.Jq('.aa')
-      assert(obj.parse('{"aa": 1}') == '1')
+      assert.deepEqual(obj.parse('{"aa": 1}'), ['1'])
+    })
+
+    it('source: ".aa"', () => {
+      const obj = new node_jq_ext.Jq('.aa')
+      assert.deepEqual(obj.parse('{"aa": "1"}'), ['"1"'])
+    })
+
+    it('source: ". | map(.aa)"', () => {
+      const obj = new node_jq_ext.Jq('. | map(.aa)')
+      assert.deepEqual(obj.parse('[{"aa":1},{"aa":2}]'), ['[1,2]'])
+    })
+
+    it('source: ".[] | .aa"', () => {
+      const obj = new node_jq_ext.Jq('.[] | .aa')
+      assert.deepEqual(obj.parse('[{"aa":1},{"aa":2}]'), ['1','2'])
     })
 
     describe('error pattern.', () => {
