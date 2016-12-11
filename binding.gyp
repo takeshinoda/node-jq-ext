@@ -7,14 +7,17 @@
       'cflags': ['-std=c++11'],
       'cflags!': ['-fno-exceptions'],
       'cflags_cc!': ['-fno-exceptions'],
-      'libraries': ['-L/opt/local/lib', '-ljq'],
       'conditions': [
         ['OS=="mac"', {
           'xcode_settings': {
             'MACOSX_DEPLOYMENT_TARGET': '10.9',
             'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
             'OTHER_CFLAGS': ['-stdlib=libc++']
-          }
+          },
+          'libraries': ['-ljq']
+        }],
+        ['OS=="linux"', {
+          'libraries': ['-Wl,-Bstatic -ljq']
         }]
       ]
     }
