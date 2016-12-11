@@ -1,6 +1,6 @@
 {
   "name": "node-jq-ext",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "jq Native extention",
   "scripts": {
     "test": "gulp test",
