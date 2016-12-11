@@ -30,7 +30,7 @@
   "dependencies": {
     "babel-polyfill": "^6.20.0",
     "bindings": "^1.2.1",
-    "bluebird": "^3.4.6"
+    "nan": "^2.4.0"
   },
   "devDependencies": {
     "babel-core": "^6.20.0",
@@ -43,7 +43,6 @@
     "gulp-mocha": "^3.0.1",
     "gulp-util": "^3.0.7",
     "mocha": "^3.2.0",
-    "nan": "^2.4.0",
     "power-assert": "^1.4.2",
     "run-sequence": "^1.2.2",
     "sinon": "^1.17.6"
